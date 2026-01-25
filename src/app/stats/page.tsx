@@ -2,7 +2,7 @@
 
 import { Header } from "@/components/Header";
 import { useSearchParams } from "next/navigation";
-import { useEffect, useState, useMemo } from "react";
+import { useEffect, useState, useMemo, Suspense } from "react"; // Suspense importiert
 import { Run, Speedrunner } from "@/app/types/speedrunner";
 import { formatTime } from "@/app/utils/format";
 
@@ -12,7 +12,6 @@ type Stats = {
     avg: number;
 };
 
-// Definition der Stages
 const STAGES = [
     { title: "Enters", splitIndex: 0 },
     { title: "Bastions", splitIndex: 1 },
@@ -23,7 +22,6 @@ const STAGES = [
     { title: "Completions", splitIndex: 6 },
 ];
 
-// --- Sub-Komponente mit 3 Modi (Amount, Avg, Fastest) ---
 const LeaderboardBox = ({
                             title,
                             splitIndex,
@@ -33,26 +31,19 @@ const LeaderboardBox = ({
     splitIndex: number;
     runners: Speedrunner[];
 }) => {
-    // State erweitert um 'fastest'
     const [viewMode, setViewMode] = useState<'amount' | 'avg' | 'fastest'>('amount');
 
     const processedRunners = useMemo(() => {
         const data = runners.map(runner => {
-            // Nur Runs, die diesen Split erreicht haben
             const validRuns = runner.runs.filter(r => r.splits.length > splitIndex);
-
             let sum = 0;
-            let fastest = Infinity; // Startwert auf unendlich setzen
+            let fastest = Infinity;
 
             if (validRuns.length > 0) {
                 for (let run of validRuns) {
                     const time = run.splits[splitIndex]?.igt || 0;
                     sum += time;
-
-                    // Suche nach der schnellsten Zeit
-                    if (time < fastest) {
-                        fastest = time;
-                    }
+                    if (time < fastest) fastest = time;
                 }
             } else {
                 fastest = 0;
@@ -64,27 +55,19 @@ const LeaderboardBox = ({
                 name: runner.name,
                 count: validRuns.length,
                 avg: avg,
-                // Wenn fastest immer noch Infinity ist (keine Runs), auf 0 setzen
                 fastest: fastest === Infinity ? 0 : fastest
             };
         });
 
-        // Nur Runner mit Daten anzeigen
         const activeRunners = data.filter(r => r.count > 0);
 
-        // Sortieren basierend auf Modus
         return activeRunners.sort((a, b) => {
-            if (viewMode === 'amount') {
-                return b.count - a.count; // Meiste zuerst
-            } else if (viewMode === 'avg') {
-                return a.avg - b.avg;     // Schnellster Durchschnitt zuerst
-            } else {
-                return a.fastest - b.fastest; // Schnellste Einzelzeit zuerst
-            }
+            if (viewMode === 'amount') return b.count - a.count;
+            if (viewMode === 'avg') return a.avg - b.avg;
+            return a.fastest - b.fastest;
         });
     }, [runners, splitIndex, viewMode]);
 
-    // Hilfsfunktion für Button-Styling
     const getBtnStyle = (mode: string) => `
         text-[10px] md:text-xs uppercase font-bold px-2 py-1 rounded transition-colors border 
         ${viewMode === mode
@@ -96,18 +79,10 @@ const LeaderboardBox = ({
         <div className="border-2 border-purple-700 w-full md:w-96 h-fit p-4 rounded-xl flex flex-col gap-4 bg-gray-800/50">
             <div className="flex justify-between items-center w-full">
                 <span className="text-2xl md:text-3xl font-bold text-purple-300">{title}</span>
-
-                {/* Button Gruppe */}
                 <div className="flex gap-1">
-                    <button onClick={() => setViewMode('amount')} className={getBtnStyle('amount')}>
-                        Amt
-                    </button>
-                    <button onClick={() => setViewMode('avg')} className={getBtnStyle('avg')}>
-                        Avg
-                    </button>
-                    <button onClick={() => setViewMode('fastest')} className={getBtnStyle('fastest')}>
-                        Fst
-                    </button>
+                    <button onClick={() => setViewMode('amount')} className={getBtnStyle('amount')}>Amt</button>
+                    <button onClick={() => setViewMode('avg')} className={getBtnStyle('avg')}>Avg</button>
+                    <button onClick={() => setViewMode('fastest')} className={getBtnStyle('fastest')}>Fst</button>
                 </div>
             </div>
 
@@ -122,7 +97,6 @@ const LeaderboardBox = ({
                                 {runner.name}
                             </span>
                             <span className="font-mono text-lg text-gray-200">
-                                {/* Anzeige Logik */}
                                 {viewMode === 'amount' && runner.count}
                                 {viewMode === 'avg' && formatTime(runner.avg)}
                                 {viewMode === 'fastest' && formatTime(runner.fastest)}
@@ -135,8 +109,8 @@ const LeaderboardBox = ({
     );
 };
 
-// --- Haupt-Komponente (unverändert zur vorherigen Version) ---
-export default function OverlayGeneratorPage() {
+// Logik in eine separate Content-Komponente
+function StatsContent() {
     const searchParams = useSearchParams();
     const [stats, setStats] = useState<Stats | null>(null);
     const [error, setError] = useState<string | null>(null);
@@ -178,10 +152,8 @@ export default function OverlayGeneratorPage() {
     return (
         <div className="bg-gray-900 min-h-screen text-white">
             <Header />
-
             <div className="p-8 flex flex-col gap-8">
-                {/* General Stats Box */}
-                <div className="border-2 border-purple-700  w-full md:w-96  p-6 rounded-xl flex flex-col gap-4 bg-gray-800 shadow-lg shadow-purple-900/20">
+                <div className="border-2 border-purple-700 w-full md:w-96 p-6 rounded-xl flex flex-col gap-4 bg-gray-800 shadow-lg shadow-purple-900/20">
                     <span className="text-4xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-pink-600">
                         Global Stats
                     </span>
@@ -199,7 +171,6 @@ export default function OverlayGeneratorPage() {
                     </div>
                 </div>
 
-                {/* Grid Layout für Leaderboards */}
                 <div className="flex flex-wrap gap-6 items-start">
                     {STAGES.map((stage) => (
                         <LeaderboardBox
@@ -212,5 +183,14 @@ export default function OverlayGeneratorPage() {
                 </div>
             </div>
         </div>
+    );
+}
+
+// Haupt-Export mit Suspense-Boundary
+export default function OverlayGeneratorPage() {
+    return (
+        <Suspense fallback={<div className="bg-gray-900 min-h-screen text-white p-8">Loading stats...</div>}>
+            <StatsContent />
+        </Suspense>
     );
 }

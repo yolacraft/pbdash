@@ -10,8 +10,8 @@ export default function OverlayGeneratorPage() {
     const [font, setFont] = useState<"mc" | "sans">("mc");
 
     const urls = useMemo(() => ({
-        leaderboard: `${BASE_URL}/leaderboard?color=${color}&font=${font}`,
-        enter: `${BASE_URL}/general?color=${color}&font=${font}`,
+        LEADERBOARD: `${BASE_URL}/leaderboard?color=${color}&font=${font}`,
+        ENTER: `${BASE_URL}/general?color=${color}&font=${font}`,
     }), [color, font]);
 
     const fontFamily =
@@ -74,7 +74,7 @@ export default function OverlayGeneratorPage() {
                             className="bg-gray-800 p-4 rounded flex flex-col gap-3"
                             style={{ fontFamily }}
                         >
-                            <p className="font-semibold capitalize">{key} Overlay</p>
+                            <p className="font-semibold capitalize">{key} OVERLAY</p>
 
                             {/* Vorschau */}
                             {idx == 1 ? (
@@ -84,11 +84,11 @@ export default function OverlayGeneratorPage() {
                                 </div>
                             ): (
                                 <div className="border p-4 rounded bg-gray-700 ">
-                                    <p style={{color: "#" + color}} className="text-2xl">1. Pinne 06:17</p>
-                                    <p style={{color: "#" + color}} className="text-2xl">2. Doogile 6:52</p>
-                                    <p style={{color: "#" + color}} className="text-2xl">3. Feinberg 9:59</p>
-                                    <p style={{color: "#" + color}} className="text-2xl">4. Fulham 15:47</p>
-                                    <p style={{color: "#" + color}} className="text-2xl">5. Ludwig 02:25:21</p>
+                                    <p style={{color: "#" + color}} className="text-2xl">1. PINNE 06:17</p>
+                                    <p style={{color: "#" + color}} className="text-2xl">2. DOOGILE 6:52</p>
+                                    <p style={{color: "#" + color}} className="text-2xl">3. FEINBERG 9:59</p>
+                                    <p style={{color: "#" + color}} className="text-2xl">4. FULHAM 15:47</p>
+                                    <p style={{color: "#" + color}} className="text-2xl">5. LUDWIG 02:25:21</p>
                                 </div>
                             )}
 
@@ -104,7 +104,7 @@ export default function OverlayGeneratorPage() {
                                     onClick={() => copyToClipboard(url)}
                                     className="bg-blue-600 hover:bg-blue-700 px-3 py-2 rounded text-white"
                                 >
-                                    Copy
+                                    COPY
                                 </button>
                             </div>
                         </div>
