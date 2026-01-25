@@ -1,65 +1,117 @@
-import Image from "next/image";
+"use client"
+
+import {Header} from "@/components/Header";
+import {Run} from "@/components/Main/Run";
+import {Split} from "@/components/Main/Split";
+import {useEffect, useState} from "react";
+import {MainPageResponse} from "@/app/types/mainpage";
 
 export default function Home() {
-  return (
-    <div className="flex min-h-screen items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex min-h-screen w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the page.tsx file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
-          </p>
-        </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
-        </div>
-      </main>
+
+    const [data, setData] = useState<MainPageResponse | null>(null);
+    const [loading, setLoading] = useState<boolean>(true);
+    const [error, setError] = useState<string | null>(null);
+
+    useEffect(() => {
+        const fetchData = async () => {
+            try {
+                setLoading(true);
+                const response = await fetch("/api/mainpage");
+
+                if (!response.ok) {
+                    throw new Error("Fehler beim Laden der Main Page Daten");
+                }
+
+                const result: MainPageResponse = await response.json();
+                setData(result);
+            } catch (err) {
+                console.error(err);
+                setError("Daten konnten nicht geladen werden.");
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        fetchData();
+
+        const interval = setInterval(fetchData, 3000);
+        return () => clearInterval(interval);
+
+    }, []);
+
+
+
+    return (
+    <div  className="bg-gray-900 h-screen">
+        <Header />
+        <main className="flex flex-col items-center">
+            <span className="text-8xl font-bold text-purple-800 mt-6">🇩🇪 PB DASH 6</span>
+            <span className="text-gray-200 text-2xl">06.02. - 08.02</span>
+
+            <div className="flex justify-between gap-24">
+                <div className="flex gap-24 mt-16">
+                    <div className="rounded-2xl border-1 border-gray-500 overflow-hidden">
+                        <div className="bg-gray-700 w-[38rem]">
+                            <span className="text-white p-4 text-3xl block">Leaderboard</span>
+                        </div>
+
+
+                        <div className="bg-[#2a3546] p-1 px-2 flex flex-col">
+                            <div className="flex justify-between mb-4">
+                                <div className="w-16"></div>
+                                <span className="text-gray-500 w-1/2">PLAYER</span>
+                                <span className="text-gray-500 w-1/2">TIME</span>
+                            </div>
+                            <div className="flex flex-col gap-2 h-[25rem] overflow-scroll">
+
+                                {data?.leaderboard.map((value, idx) => (
+                                    <div key={idx}>
+                                        <Run Player={value.name} Time={value.Time} pb={value.pb} place={idx+1} />
+                                        {idx < data?.leaderboard.length-1 && (
+                                            <div className="w-full bg-neutral-500 h-0.5 my-2 rounded-full"></div>
+                                        )}
+                                    </div>
+                                ))}
+
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+
+
+                <div className="flex justify-between gap-24 mt-16">
+                    <div className="rounded-2xl bg-[#2a3546] border-1 border-gray-500 overflow-hidden">
+                        <div className="bg-gray-700 w-[38rem]">
+                            <span className="text-white p-4 text-3xl block">Live Pace</span>
+                        </div>
+
+                        <div className="bg-[#2a3546] p-1 px-2 flex flex-col">
+                            <div className="flex justify-between mb-4">
+                                <span className="text-gray-500 w-1/2">PLAYER</span>
+                                <span className="text-gray-500 w-1/2">SPLIT</span>
+                                <span className="text-gray-500 w-1/6">TIME</span>
+                            </div>
+
+                            <div className="flex flex-col gap-2 h-[25rem] overflow-scroll">
+
+                                {data?.paces.map((value, idx) => (
+                                    <div key={idx}>
+                                        <Split Player={value.name} Split={value.split} Time={value.Time} Twitch={value.twitch || undefined} />
+                                        {idx < data?.paces.length-1 && (
+                                            <div className="w-full bg-neutral-500 h-0.5 my-2 rounded-full"></div>
+                                        )}
+                                    </div>
+                                ))}
+
+
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
     </div>
   );
 }
