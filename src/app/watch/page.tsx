@@ -47,7 +47,7 @@ const home = () => {
                 <div className="w-3/4 flex justify-center mt-10">
                     {runs?.some(run => run.liveStreamed != null) ? (
                         <div>
-                            <iframe src={`https://player.twitch.tv/?channel=${runs?.find(run => run.liveStreamed != null)?.liveStreamed}&parent=localhost`} frameBorder="0"
+                            <iframe src={`https://player.twitch.tv/?channel=${runs?.find(run => run.liveStreamed != null)?.liveStreamed}&parent=pbdash.yolacraft.de`} frameBorder="0"
                                     allowFullScreen={false} scrolling="no" height="720" width="1280" className=""></iframe>
                             <div className=" mt-4 flex gap-8 items-center">
                                 <div className="bg-amber-500/50 text-4xl text-neutral-200 p-4 rounded-md w-fit">

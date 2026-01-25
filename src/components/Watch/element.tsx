@@ -48,7 +48,7 @@ export const Element:React.FC<ElementProps> = ({livestream, time, split, Name, s
             {livestream != null && livestream != "null " && livestream != undefined && livestream != "" && (
                 <div className="mx-2 mt-2">
                     <iframe
-                        src={`https://player.twitch.tv/?channel=${livestream}&parent=localhost`}
+                        src={`https://player.twitch.tv/?channel=${livestream}&parent=pbdash.yolacraft.de`}
                         className="w-full aspect-video"
                         frameBorder="0"
                         scrolling="no"
