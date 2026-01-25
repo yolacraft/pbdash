@@ -58,7 +58,7 @@ function LeaderboardOverlayContent() {
                     {stats.leaderboard.slice(0, 5).map((item, idx) => (
                         <div key={idx}>
                             <span>
-                                {idx + 1} {item.name} {formatMsToMMSS(item.Time)}{" "}
+                                {idx + 1} {fontParam == "mc" ? item.name.toUpperCase() : item.name} {formatMsToMMSS(item.Time)}{" "}
                                 {item.pb && "(PB)"}
                             </span>
                         </div>
