@@ -13,6 +13,7 @@ export const Header = () => {
         { href: "/watch", label: "Watch" },
         { href: "/overlays", label: "Overlays" },
         { href: "/stats", label: "Stats" },
+        { href: "/bot", label: "Bot" },
         { href: "https://discord.gg/NHrd59NWre", label: "Discord", external: true },
     ];
 
