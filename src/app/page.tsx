@@ -1,6 +1,7 @@
 "use client"
 
 import {Header} from "@/components/Header";
+import {Countdown} from "@/components/Countdown";
 import {Run} from "@/components/Main/Run";
 import {Split} from "@/components/Main/Split";
 import {useEffect, useState} from "react";
@@ -52,11 +53,13 @@ export default function Home() {
 
                 {/* Titel responsive machen: Mobile kleiner, Desktop groß */}
                 <span className="text-4xl md:text-6xl lg:text-8xl font-bold text-purple-800 mt-6 text-center">
-                    🇩🇪 PB DASH 6
+                    🇩🇪 PB DASH 7
                 </span>
                 <span className="text-gray-200 text-lg md:text-2xl mt-2">
                     25.07. - 26.07
                 </span>
+
+                <Countdown />
 
                 {/* Container für die beiden Tabellen:
                     Mobile: untereinander (flex-col), Tablet/Desktop: nebeneinander (xl:flex-row) */}

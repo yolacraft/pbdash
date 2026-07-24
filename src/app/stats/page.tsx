@@ -186,7 +186,6 @@ function StatsContent() {
     );
 }
 
-// Haupt-Export mit Suspense-Boundary
 export default function OverlayGeneratorPage() {
     return (
         <Suspense fallback={<div className="bg-gray-900 min-h-screen text-white p-8">Loading stats...</div>}>
