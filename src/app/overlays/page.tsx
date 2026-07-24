@@ -49,6 +49,7 @@ export default function OverlayGeneratorPage() {
                             <label className="font-medium text-gray-300">Farbe</label>
                             <div className="flex items-center gap-3">
                                 <input
+
                                     type="color"
                                     value={`#${color}`}
                                     onChange={(e) => setColor(e.target.value.replace("#", ""))}
