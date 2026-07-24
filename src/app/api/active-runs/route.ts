@@ -1,7 +1,8 @@
 import { NextResponse } from "next/server";
 import {Run} from "@/app/types/speedrunner";
+import { backendUrl } from "@/app/config/backend";
 
-const EXTERNAL_API_URL = "http://45.93.249.181:8080/api/getActiveRuns";
+const EXTERNAL_API_URL = backendUrl("/api/getActiveRuns");
 
 export async function GET() {
     try {

@@ -55,7 +55,7 @@ export default function Home() {
                     🇩🇪 PB DASH 6
                 </span>
                 <span className="text-gray-200 text-lg md:text-2xl mt-2">
-                    06.02. - 08.02
+                    25.07. - 26.07
                 </span>
 
                 {/* Container für die beiden Tabellen:

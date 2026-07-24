@@ -1,8 +1,9 @@
 // app/api/speedrunners/route.ts
 import { NextResponse } from "next/server";
 import {Speedrunner} from "@/app/types/speedrunner";
+import { backendUrl } from "@/app/config/backend";
 
-const EXTERNAL_API_URL = "http://45.93.249.181:8080/api/getSpeedrunners";
+const EXTERNAL_API_URL = backendUrl("/api/getSpeedrunners");
 
 export async function GET() {
     try {

@@ -1,8 +1,9 @@
 // app/api/mainpage/route.ts
 import { NextResponse } from "next/server";
 import { MainPageResponse } from "@/app/types/mainpage";
+import { backendUrl } from "@/app/config/backend";
 
-const EXTERNAL_API_URL = "http://45.93.249.181:8080/api/getMainPageStuff";
+const EXTERNAL_API_URL = backendUrl("/api/getMainPageStuff");
 
 export async function GET() {
     try {

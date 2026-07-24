@@ -1,7 +1,8 @@
 import { NextResponse } from "next/server";
+import { backendUrl } from "@/app/config/backend";
 
 export async function GET() {
-    const res = await fetch("http://45.93.249.181:8080/api/getRunStatistics", {
+    const res = await fetch(backendUrl("/api/getRunStatistics"), {
         cache: "no-store",
     });
 
