@@ -123,12 +123,12 @@ export const Header = () => {
                                 if (e.key === "Enter") goToProfile(query);
                             }}
                             placeholder="Player suchen..."
-                            className="w-full bg-gray-800 border border-gray-700 focus:border-purple-500 rounded-full py-2 pl-9 pr-3 text-sm outline-none transition-colors placeholder:text-gray-500"
+                            className="w-full bg-gray-800 border border-gray-700 focus:border-purple-500 rounded-md py-2 pl-9 pr-3 text-sm outline-none transition-colors placeholder:text-gray-500"
                         />
                     </div>
 
                     {showSuggestions && filtered.length > 0 && (
-                        <div className="absolute mt-2 w-full bg-gray-800 border border-gray-700 rounded-xl overflow-hidden shadow-xl">
+                        <div className="absolute mt-2 w-full bg-gray-800 border border-gray-700 rounded-md overflow-hidden shadow-xl">
                             {filtered.map((name) => (
                                 <button
                                     key={name}

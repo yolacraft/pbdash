@@ -1,3 +1,5 @@
+import Link from "next/link";
+
 interface Props {
     Player: string;
     Time: number;
@@ -34,15 +36,16 @@ export const Run: React.FC<Props> = ({ Player, Time, pb, place }) => {
             </div>
 
             {/* Player */}
-            <div className="w-1/2 flex items-center gap-2">
+            <Link href={`/profile/${encodeURIComponent(Player)}`} className="w-1/2 flex items-center gap-2 hover:opacity-80 transition-opacity">
                 <img
                     src={`https://mc-heads.net/avatar/${Player}/32`}
                     alt={Player}
+                    className="rounded"
                 />
                 <span className={`${colorClass} text-2xl`}>
           {Player}
         </span>
-            </div>
+            </Link>
 
             {/* Zeit */}
             <div className="w-1/2">

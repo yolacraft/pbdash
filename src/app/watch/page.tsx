@@ -1,5 +1,6 @@
 "use client"
 
+import Link from "next/link";
 import { Element } from "@/components/Watch/element";
 import { useEffect, useState } from "react";
 import { Run } from "@/app/types/speedrunner";
@@ -62,7 +63,7 @@ const Home = () => {
                         <div className="w-full max-w-[1280px] flex flex-col items-center">
 
                             {/* Responsive Video Container (Aspect Ratio) */}
-                            <div className="w-full aspect-video bg-black shadow-lg">
+                            <div className="w-full aspect-video bg-black rounded-xl overflow-hidden border border-gray-700 shadow-2xl shadow-black/40">
                                 <iframe
                                     src={`https://player.twitch.tv/?channel=${activeStreamer?.liveStreamed}&parent=pbdash.yolacraft.de`}
                                     frameBorder="0"
@@ -74,9 +75,15 @@ const Home = () => {
 
                             {/* Info Area unter dem Video */}
                             <div className="mt-4 flex flex-col md:flex-row gap-4 md:gap-8 items-center w-full justify-center">
-                                <div className="bg-amber-500/50 text-2xl md:text-4xl text-neutral-200 p-2 md:p-4 rounded-md w-fit font-bold shadow-md text-center">
-                                    {activeStreamer?.playerName}
-                                </div>
+                                <Link
+                                    href={`/profile/${encodeURIComponent(activeStreamer?.playerName ?? "")}`}
+                                    className="flex items-center gap-2 bg-gray-800/80 border border-purple-900/40 px-4 py-2 md:px-6 md:py-3 rounded-full w-fit shadow-lg shadow-purple-900/20 hover:opacity-80 transition-opacity"
+                                >
+                                    <span className="w-2 h-2 rounded-full bg-red-500 animate-pulse shrink-0" />
+                                    <span className="text-2xl md:text-4xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-pink-500 text-center">
+                                        {activeStreamer?.playerName}
+                                    </span>
+                                </Link>
 
                                 {/* Splits: Flex-Wrap erlaubt Umbruch auf kleinen Screens */}
                                 <div className="flex gap-4 md:gap-8 flex-wrap justify-center">
@@ -97,7 +104,7 @@ const Home = () => {
                         </div>
                     ) : (
                         <div className="flex items-center justify-center h-64 lg:h-auto">
-                            <span className="text-white text-4xl md:text-6xl lg:text-8xl text-center px-4">
+                            <span className="text-4xl md:text-6xl lg:text-8xl text-center px-4 font-bold bg-clip-text text-transparent bg-gradient-to-r from-purple-400 via-fuchsia-400 to-pink-500">
                                 Niemand Live...
                             </span>
                         </div>
@@ -105,13 +112,15 @@ const Home = () => {
                 </div>
 
                 {/* Sidebar / List: Mobil 100%, Desktop 25% */}
-                <div className="w-full lg:w-1/4 flex flex-col border-t-4 lg:border-t-0 lg:border-l-4 border-gray-600 bg-gray-800/50 lg:bg-transparent">
+                <div className="w-full lg:w-1/4 flex flex-col border-t border-gray-800 lg:border-t-0 lg:border-l lg:border-gray-800 bg-gray-800/20">
                     {/* Header der Liste */}
-                    <span className="p-4 text-neutral-200 text-2xl md:text-3xl font-bold bg-gray-900 lg:bg-transparent sticky top-0 z-10">
-                        Mehr Runs:
-                    </span>
+                    <div className="p-4 bg-gray-900 lg:bg-transparent sticky top-0 z-10">
+                        <span className="text-2xl md:text-3xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-purple-400 to-pink-500">
+                            Mehr Runs
+                        </span>
+                    </div>
 
-                    <div className="h-1.5 bg-gray-600 w-full hidden lg:block"></div>
+                    <div className="h-px bg-gray-800 w-full hidden lg:block"></div>
 
                     {/* Scrollbarer Bereich für die Liste */}
                     {/* Auf Mobile: Auto-Höhe oder max-height. Auf Desktop: Füllt verbleibenden Platz */}

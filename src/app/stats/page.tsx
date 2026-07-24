@@ -1,9 +1,10 @@
 "use client";
 
+import Link from "next/link";
 import { Header } from "@/components/Header";
 import { useSearchParams } from "next/navigation";
 import { useEffect, useState, useMemo, Suspense } from "react"; // Suspense importiert
-import { Run, Speedrunner } from "@/app/types/speedrunner";
+import { Speedrunner } from "@/app/types/speedrunner";
 import { formatTime } from "@/app/utils/format";
 
 type Stats = {
@@ -69,16 +70,16 @@ const LeaderboardBox = ({
     }, [runners, splitIndex, viewMode]);
 
     const getBtnStyle = (mode: string) => `
-        text-[10px] md:text-xs uppercase font-bold px-2 py-1 rounded transition-colors border 
+        text-[10px] md:text-xs uppercase font-bold px-2 py-1 rounded transition-colors border
         ${viewMode === mode
         ? 'bg-purple-600 border-purple-400 text-white'
-        : 'bg-gray-700 border-transparent text-gray-400 hover:bg-gray-600'}
+        : 'bg-gray-900/60 border-gray-700 text-gray-400 hover:bg-gray-700'}
     `;
 
     return (
-        <div className="border-2 border-purple-700 w-full md:w-96 h-fit p-4 rounded-xl flex flex-col gap-4 bg-gray-800/50">
-            <div className="flex justify-between items-center w-full">
-                <span className="text-2xl md:text-3xl font-bold text-purple-300">{title}</span>
+        <div className="w-full md:w-96 h-fit border border-gray-700 overflow-hidden shadow-xl shadow-black/20 flex flex-col">
+            <div className="bg-gradient-to-r from-gray-800 to-gray-800/60 p-4 border-b border-purple-900/40 flex justify-between items-center">
+                <span className="text-xl md:text-2xl font-bold text-purple-300">{title}</span>
                 <div className="flex gap-1">
                     <button onClick={() => setViewMode('amount')} className={getBtnStyle('amount')}>Amt</button>
                     <button onClick={() => setViewMode('avg')} className={getBtnStyle('avg')}>Avg</button>
@@ -86,12 +87,16 @@ const LeaderboardBox = ({
                 </div>
             </div>
 
-            <div className="flex flex-col gap-1 h-64 overflow-y-auto pr-2 custom-scrollbar">
+            <div className="bg-[#2a3546] p-4 flex flex-col gap-1 h-64 overflow-y-auto custom-scrollbar">
                 {processedRunners.length === 0 ? (
                     <span className="text-gray-500 text-sm italic">No runs yet</span>
                 ) : (
                     processedRunners.map((runner, idx) => (
-                        <div className="flex justify-between w-full border-b border-gray-700/50 pb-1 last:border-0" key={runner.name}>
+                        <Link
+                            href={`/profile/${encodeURIComponent(runner.name)}`}
+                            className="flex justify-between w-full border-b border-gray-700/50 pb-1 last:border-0 hover:text-purple-300 transition-colors"
+                            key={runner.name}
+                        >
                             <span className="truncate max-w-[60%] text-lg">
                                 <span className="text-purple-400 mr-2 font-mono text-sm">{idx + 1}.</span>
                                 {runner.name}
@@ -101,7 +106,7 @@ const LeaderboardBox = ({
                                 {viewMode === 'avg' && formatTime(runner.avg)}
                                 {viewMode === 'fastest' && formatTime(runner.fastest)}
                             </span>
-                        </div>
+                        </Link>
                     ))
                 )}
             </div>
@@ -150,37 +155,49 @@ function StatsContent() {
     }, []);
 
     return (
-        <div className="bg-gray-900 min-h-screen text-white">
-            <Header />
-            <div className="p-8 flex flex-col gap-8">
-                <div className="border-2 border-purple-700 w-full md:w-96 p-6 rounded-xl flex flex-col gap-4 bg-gray-800 shadow-lg shadow-purple-900/20">
-                    <span className="text-4xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-pink-600">
-                        Global Stats
+        <div className="bg-gray-900 min-h-screen text-white flex flex-col relative overflow-hidden">
+
+            {/* Dekorativer Glow-Hintergrund */}
+            <div className="absolute inset-0 pointer-events-none overflow-hidden">
+                <div className="absolute -top-56 left-1/2 -translate-x-1/2 w-[70rem] h-[70rem] bg-purple-700/10 rounded-full blur-3xl" />
+            </div>
+
+            <div className="relative z-10 flex flex-col flex-1">
+                <Header />
+                <main className="p-6 md:p-8 w-full flex flex-col gap-8">
+                    <span className="text-4xl md:text-5xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-purple-400 via-fuchsia-400 to-pink-500">
+                        Statistiken
                     </span>
-                    <div className="flex justify-between text-xl">
-                        <div className="flex flex-col gap-2 text-gray-400 w-fit">
-                            <span>Total Enters:</span>
-                            <span>Global Avg:</span>
-                            <span>Completions:</span>
+
+                    <div className="w-full md:w-96 border border-gray-700 overflow-hidden shadow-xl shadow-black/20">
+                        <div className="bg-gradient-to-r from-gray-800 to-gray-800/60 p-4 border-b border-purple-900/40">
+                            <span className="text-xl md:text-2xl font-bold">Global Stats</span>
                         </div>
-                        <div className="flex flex-col gap-2 text-right font-mono text-white w-fit">
-                            <span>{stats?.enter || 0}</span>
-                            <span>{formatTime(stats?.avg || 0)}</span>
-                            <span>{stats?.completions || 0}</span>
+                        <div className="bg-[#2a3546] p-6 flex justify-between text-xl">
+                            <div className="flex flex-col gap-2 text-gray-400 w-fit">
+                                <span>Total Enters:</span>
+                                <span>Global Avg:</span>
+                                <span>Completions:</span>
+                            </div>
+                            <div className="flex flex-col gap-2 text-right font-mono text-white w-fit">
+                                <span>{stats?.enter || 0}</span>
+                                <span>{formatTime(stats?.avg || 0)}</span>
+                                <span>{stats?.completions || 0}</span>
+                            </div>
                         </div>
                     </div>
-                </div>
 
-                <div className="flex flex-wrap gap-6 items-start">
-                    {STAGES.map((stage) => (
-                        <LeaderboardBox
-                            key={stage.title}
-                            title={stage.title}
-                            splitIndex={stage.splitIndex}
-                            runners={speedrunners}
-                        />
-                    ))}
-                </div>
+                    <div className="flex flex-wrap gap-6 items-start">
+                        {STAGES.map((stage) => (
+                            <LeaderboardBox
+                                key={stage.title}
+                                title={stage.title}
+                                splitIndex={stage.splitIndex}
+                                runners={speedrunners}
+                            />
+                        ))}
+                    </div>
+                </main>
             </div>
         </div>
     );

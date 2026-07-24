@@ -1,3 +1,6 @@
+import Link from "next/link";
+import { FaTwitch } from "react-icons/fa";
+
 interface ComProps {
     Player: string;
     Split: string;
@@ -33,26 +36,32 @@ export const Split: React.FC<ComProps> = ({ Player, Split, Twitch, Time }) => {
                 <img
                     src={`https://mc-heads.net/avatar/${Player}/32`}
                     alt={Player}
+                    className="rounded"
                 />
 
-                {hasTwitch ? (
+                <Link
+                    href={`/profile/${encodeURIComponent(Player)}`}
+                    className="text-neutral-200 hover:text-purple-400 text-2xl transition-colors"
+                >
+                    {Player}
+                </Link>
+
+                {hasTwitch && (
                     <a
-                        className="text-purple-700 text-2xl cursor-pointer"
                         href={`https://twitch.tv/${Twitch}`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-[#9146FF] hover:text-[#a970ff] transition-colors"
                     >
-                        {Player}
+                        <FaTwitch className="w-4 h-4" />
                     </a>
-                ) : (
-                    <span className="text-neutral-200 text-2xl">
-                        {Player}
-                    </span>
                 )}
             </div>
 
             <div className="w-1/2">
                 {splitData && (
                     <div className="flex gap-2 items-center text-neutral-200 text-2xl">
-                        <img src={`/icons/${splitData.icon}.png`} />
+                        <img src={`/icons/${splitData.icon}.png`} alt="" />
                         <span>{splitData.label}</span>
                     </div>
                 )}

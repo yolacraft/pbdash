@@ -166,7 +166,7 @@ export default function ProfilePage() {
                                     rel="noopener noreferrer"
                                     className="flex items-center gap-2 bg-gray-700 hover:bg-gray-600 transition-colors text-white text-sm font-semibold px-4 py-2 rounded-sm"
                                 >
-                                    <img src="https://paceman.gg/favicon.ico" alt="" className="w-4 h-4" />
+                                    <img src="/paceman.png" alt="" className="w-4 h-4" />
                                     Paceman
                                 </a>
                             </div>
