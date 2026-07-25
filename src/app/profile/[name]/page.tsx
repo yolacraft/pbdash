@@ -5,6 +5,7 @@ import { useParams } from "next/navigation";
 import { Fragment, useEffect, useState } from "react";
 import { FaTwitch } from "react-icons/fa";
 import { Speedrunner, Run } from "@/app/types/speedrunner";
+import { PacemanNphResponse } from "@/app/types/paceman";
 import { formatTime } from "@/app/utils/format";
 
 const SPLIT_ORDER = [
@@ -43,6 +44,7 @@ export default function ProfilePage() {
     const [loading, setLoading] = useState(true);
     const [notFound, setNotFound] = useState(false);
     const [skinFailed, setSkinFailed] = useState(false);
+    const [nph, setNph] = useState<number | null>(null);
 
     useEffect(() => {
         if (!name) return;
@@ -73,6 +75,29 @@ export default function ProfilePage() {
 
         fetchRunner();
         const interval = setInterval(fetchRunner, 5000);
+        return () => clearInterval(interval);
+    }, [name]);
+
+    useEffect(() => {
+        if (!name) return;
+
+        const fetchNph = async () => {
+            try {
+                const res = await fetch(`/api/nph/${encodeURIComponent(name)}`, { cache: "no-store" });
+                if (!res.ok) {
+                    setNph(null);
+                    return;
+                }
+                const data: PacemanNphResponse = await res.json();
+                setNph(typeof data.rnph === "number" ? data.rnph : null);
+            } catch (err) {
+                console.error(err);
+                setNph(null);
+            }
+        };
+
+        fetchNph();
+        const interval = setInterval(fetchNph, 30000);
         return () => clearInterval(interval);
     }, [name]);
 
@@ -179,6 +204,10 @@ export default function ProfilePage() {
                                     <div className="text-xs md:text-sm uppercase tracking-widest text-gray-400">PB Completion</div>
                                 </div>
                                 <div className="flex gap-6 pb-1">
+                                    <div>
+                                        <div className="text-2xl font-mono font-bold">{nph !== null ? nph.toFixed(1) : "Lade..."}</div>
+                                        <div className="text-xs uppercase text-gray-400">NPH</div>
+                                    </div>
                                     <div>
                                         <div className="text-2xl font-mono font-bold">{visibleRuns.length}</div>
                                         <div className="text-xs uppercase text-gray-400">Runs</div>
