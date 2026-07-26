@@ -5,4 +5,5 @@ export interface PacemanNphResponse {
     avg: string;
     rnph: number;
     uuid: string;
+    debugUrl: string;
 }

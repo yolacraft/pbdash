@@ -38,9 +38,6 @@ export const Element:React.FC<ElementProps> = ({livestream, time, split, Name, s
                     <span className="text-gray-100 text-lg font-semibold">
                         {Name}
                     </span>
-                    {hasTwitch && (
-                        <span className="w-1.5 h-1.5 rounded-full bg-red-500 animate-pulse" />
-                    )}
                 </Link>
                 <div className="flex items-center gap-2">
                     <img src={"/icons/" + split + ".png"} alt="" className="w-5 h-5" />
@@ -53,7 +50,7 @@ export const Element:React.FC<ElementProps> = ({livestream, time, split, Name, s
                 <div className="px-3 pb-3">
                     <iframe
                         src={`https://player.twitch.tv/?channel=${livestream}&parent=pbdash.yolacraft.de`}
-                        className="w-full aspect-video rounded-lg overflow-hidden border border-gray-700"
+                        className="w-full aspect-video overflow-hidden border border-gray-700"
                         frameBorder="0"
                         scrolling="no"
                         allowFullScreen={false}

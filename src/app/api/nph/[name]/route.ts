@@ -36,14 +36,14 @@ export async function GET(
 
         if (!res.ok) {
             return NextResponse.json(
-                { error: `Paceman API error: ${res.status}` },
+                { error: `Paceman API error: ${res.status}`, debugUrl: url },
                 { status: res.status }
             );
         }
 
         const data = await res.json();
 
-        return NextResponse.json(data, { status: 200 });
+        return NextResponse.json({ ...data, debugUrl: url }, { status: 200 });
 
     } catch (error) {
         console.error("API Route Error:", error);
